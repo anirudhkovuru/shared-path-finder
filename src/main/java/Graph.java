@@ -6,18 +6,18 @@ import java.util.Set;
 public class Graph {
     private Map<String, Set<String>> adjList;
 
-    public Graph() {
+    Graph() {
         adjList = new HashMap<>();
     }
 
-    public void addEdge(String node1, String node2) {
+    void addEdge(String node1, String node2) {
         Set<String> node1List = adjList.computeIfAbsent(node1, k -> new HashSet<>());
         node1List.add(node2);
         Set<String> node2List = adjList.computeIfAbsent(node2, k -> new HashSet<>());
         node2List.add(node1);
     }
 
-    public int shortestPath(String node1, String node2) {
+    int shortestPath(String node1, String node2) {
         Map<String, Integer> dist = new HashMap<>();
         Map<String, Boolean> sptSet = new HashMap<>();
 
@@ -67,24 +67,6 @@ public class Graph {
             responseBuilder.append("\n");
         }
 
-        System.out.println(responseBuilder.toString());
         return responseBuilder.toString();
     }
-
-//    public static void main(String[] args) {
-//        Graph g = new Graph();
-//        g.addEdge("1", "2");
-//        g.printGraph();
-//        g.addEdge("2", "3");
-//        g.printGraph();
-//        g.addEdge("1", "3");
-//        g.printGraph();
-//        g.addEdge("3", "4");
-//        g.printGraph();
-//        g.addEdge("5", "6");
-//        g.printGraph();
-//
-//        System.out.println(g.shortestPath("1", "4"));
-//        System.out.println(g.shortestPath("1", "6"));
-//    }
 }
