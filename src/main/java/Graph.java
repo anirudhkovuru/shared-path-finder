@@ -40,7 +40,8 @@ public class Graph {
             }
         }
 
-        return -1;
+        if (dist.get(node2) == Integer.MAX_VALUE) return -1;
+        return dist.get(node2);
     }
 
     private static String minDistance(Map<String, Integer> dist, Map<String, Boolean> sptSet) {
@@ -55,5 +56,17 @@ public class Graph {
         }
 
         return min_index;
+    }
+
+    public static void main(String[] args) {
+        Graph g = new Graph();
+        g.addEdge("1", "2");
+        g.addEdge("2", "3");
+        g.addEdge("1", "3");
+        g.addEdge("3", "4");
+        g.addEdge("5", "6");
+
+        System.out.println(g.shortestPath("1", "4"));
+        System.out.println(g.shortestPath("1", "6"));
     }
 }
