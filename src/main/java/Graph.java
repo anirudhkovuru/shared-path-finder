@@ -26,6 +26,34 @@ public class Graph {
             sptSet.put(v, false);
         });
 
+        dist.put(node1, 0);
+
+        for (int i=0 ; i<adjList.size() ; i++) {
+            String u = minDistance(dist, sptSet);
+            sptSet.put(u, true);
+
+            for (String v : adjList.keySet()) {
+                if (!sptSet.get(v) && adjList.get(u).contains(v) && dist.get(u) != Integer.MAX_VALUE &&
+                        dist.get(u) + 1 < dist.get(v)) {
+                    dist.put(v, dist.get(u) + 1);
+                }
+            }
+        }
+
         return -1;
+    }
+
+    private static String minDistance(Map<String, Integer> dist, Map<String, Boolean> sptSet) {
+        int min = Integer.MAX_VALUE;
+        String min_index = "";
+
+        for (String v : dist.keySet()) {
+            if (!sptSet.get(v) && dist.get(v) <= min) {
+                min = dist.get(v);
+                min_index = v;
+            }
+        }
+
+        return min_index;
     }
 }
