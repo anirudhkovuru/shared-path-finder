@@ -1,3 +1,3 @@
-grant codeBase "file:file:./out/production/classes" {
+grant codeBase "file:./out/production/classes" {
     permission java.security.AllPermission;
 };
