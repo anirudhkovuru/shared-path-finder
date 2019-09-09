@@ -40,6 +40,11 @@ public class Server implements Executor {
         String node1 = nodes.get(0);
         String node2 = nodes.get(1);
 
+        if (graph.doesNotContainVertex(node1) || graph.doesNotContainVertex(node2)) {
+            log("ERROR: one of the vertices does not exist");
+            return "ERROR: one of the vertices does not exist";
+        }
+
         log(String.format("OK: Sent the path length between %s and %s", node1, node2));
         return String.valueOf(graph.shortestPath(node1, node2));
     }

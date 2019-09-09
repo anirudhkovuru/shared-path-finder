@@ -10,6 +10,10 @@ public class Graph {
         adjList = new HashMap<>();
     }
 
+    boolean doesNotContainVertex(String node) {
+        return !adjList.containsKey(node);
+    }
+
     void addEdge(String node1, String node2) {
         Set<String> node1List = adjList.computeIfAbsent(node1, k -> new HashSet<>());
         node1List.add(node2);
