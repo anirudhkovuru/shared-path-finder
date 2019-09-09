@@ -52,6 +52,7 @@ public class Server implements Executor {
     private String getGraphTask() {
         String graphString = graph.toString();
         log("OK: Sent graph");
+        if (graphString.isEmpty()) return graphString;
         return graphString.substring(0, graphString.length()-1);
     }
 
