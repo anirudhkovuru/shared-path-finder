@@ -58,15 +58,33 @@ public class Graph {
         return min_index;
     }
 
-    public static void main(String[] args) {
-        Graph g = new Graph();
-        g.addEdge("1", "2");
-        g.addEdge("2", "3");
-        g.addEdge("1", "3");
-        g.addEdge("3", "4");
-        g.addEdge("5", "6");
+    public String toString() {
+        StringBuilder responseBuilder = new StringBuilder();
 
-        System.out.println(g.shortestPath("1", "4"));
-        System.out.println(g.shortestPath("1", "6"));
+        for (String v : adjList.keySet()) {
+            responseBuilder.append(v).append(" ---- ");
+            adjList.get(v).forEach(u -> responseBuilder.append(u).append(", "));
+            responseBuilder.append("\n");
+        }
+
+        System.out.println(responseBuilder.toString());
+        return responseBuilder.toString();
     }
+
+//    public static void main(String[] args) {
+//        Graph g = new Graph();
+//        g.addEdge("1", "2");
+//        g.printGraph();
+//        g.addEdge("2", "3");
+//        g.printGraph();
+//        g.addEdge("1", "3");
+//        g.printGraph();
+//        g.addEdge("3", "4");
+//        g.printGraph();
+//        g.addEdge("5", "6");
+//        g.printGraph();
+//
+//        System.out.println(g.shortestPath("1", "4"));
+//        System.out.println(g.shortestPath("1", "6"));
+//    }
 }

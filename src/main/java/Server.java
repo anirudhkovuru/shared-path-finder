@@ -12,7 +12,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class Server implements Executor {
-    private static DefaultUndirectedGraph<String, DefaultEdge> graph = new DefaultUndirectedGraph<>(DefaultEdge.class);
+//    private static DefaultUndirectedGraph<String, DefaultEdge> graph = new DefaultUndirectedGraph<>(DefaultEdge.class);
+
+    Graph graph = new Graph();
 
     private static final String ADD_EDGE_COMMAND = "add_edge";
     private static final String SHORTEST_DISTANCE_COMMAND = "shortest_distance";
@@ -30,9 +32,11 @@ public class Server implements Executor {
 
         String node1 = nodes.get(0);
         String node2 = nodes.get(1);
+//
+//        graph.addVertex(node1);
+//        graph.addVertex(node2);
+//        graph.addEdge(node1, node2);
 
-        graph.addVertex(node1);
-        graph.addVertex(node2);
         graph.addEdge(node1, node2);
 
         log(String.format("OK: Edge added between %s and %s", node1, node2));
@@ -48,30 +52,30 @@ public class Server implements Executor {
         String node1 = nodes.get(0);
         String node2 = nodes.get(1);
 
-        DijkstraShortestPath<String, DefaultEdge> dijkstraAlg = new DijkstraShortestPath<>(graph);
-        SingleSourcePaths<String, DefaultEdge> node1Paths = dijkstraAlg.getPaths(node1);
-        GraphPath<String, DefaultEdge> path = node1Paths.getPath(node2);
+//        DijkstraShortestPath<String, DefaultEdge> dijkstraAlg = new DijkstraShortestPath<>(graph);
+//        SingleSourcePaths<String, DefaultEdge> node1Paths = dijkstraAlg.getPaths(node1);
+//        GraphPath<String, DefaultEdge> path = node1Paths.getPath(node2);
 
-        if (path == null) {
-            log(String.format("OK: Sent the path length between %s and %s", node1, node2));
-            return "-1";
-        }
+//        if (path == null) {
+//            log(String.format("OK: Sent the path length between %s and %s", node1, node2));
+//            return "-1";
+//        }
 
         log(String.format("OK: Sent the path length between %s and %s", node1, node2));
-        return String.valueOf(path.getLength());
+        return String.valueOf(graph.shortestPath(node1, node2));
     }
 
     private String getGraphTask() {
-        StringBuilder responseBuilder = new StringBuilder();
+//        StringBuilder responseBuilder = new StringBuilder();
+//
+//        graph.edgeSet().forEach(e -> {
+//            responseBuilder.append(graph.getEdgeSource(e)).append(" ");
+//            responseBuilder.append("----- ");
+//            responseBuilder.append(graph.getEdgeTarget(e)).append("\n");
+//        });
 
-        graph.edgeSet().forEach(e -> {
-            responseBuilder.append(graph.getEdgeSource(e)).append(" ");
-            responseBuilder.append("----- ");
-            responseBuilder.append(graph.getEdgeTarget(e)).append("\n");
-        });
 
-
-        String graphString = responseBuilder.toString();
+        String graphString = graph.toString();
         log("OK: Sent graph");
         return graphString.substring(0, graphString.length()-1);
     }
