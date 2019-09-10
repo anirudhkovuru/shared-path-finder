@@ -3,15 +3,20 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Server implements Executor {
 
     private Graph graph = new Graph();
+    private Map<String, Graph> graphs = new HashMap<>();
 
     private static final String ADD_EDGE_COMMAND = "add_edge";
     private static final String SHORTEST_DISTANCE_COMMAND = "shortest_distance";
     private static final String GET_GRAPH_COMMAND = "get_graph";
+    private static final String ADD_GRAPH_COMMAND = "add_graph";
+    private static final String LIST_GRAPH_COMMAND = "list_graphs";
 
     private Server() {
         super();
@@ -56,6 +61,33 @@ public class Server implements Executor {
         return graphString.substring(0, graphString.length()-1);
     }
 
+    private String addGraphTask(List<String> names) {
+        if (names.size() != 1) {
+            log("ERROR: name required");
+            return "ERROR: name required";
+        }
+
+        String name = names.get(0);
+        graphs.put(name, new Graph());
+        log(String.format("OK: %s graph added", name));
+        return String.format("OK: %s graph added", name);
+    }
+
+    private String listGraphsTask() {
+        StringBuilder responseBuilder = new StringBuilder();
+
+        graphs.keySet().forEach(g -> {
+            responseBuilder.append(g);
+            responseBuilder.append("\n");
+        });
+
+        String graphNames = responseBuilder.toString();
+
+        log("OK: Sent graph names");
+        if (graphNames.isEmpty()) return graphNames;
+        return graphNames.substring(0, graphNames.length()-1);
+    }
+
     @Override
     public String execute(String line) {
         if (line.trim().isEmpty()) {
@@ -73,6 +105,12 @@ public class Server implements Executor {
                 break;
             case GET_GRAPH_COMMAND:
                 response = getGraphTask();
+                break;
+            case ADD_GRAPH_COMMAND:
+                response = addGraphTask(command.getArgs());
+                break;
+            case LIST_GRAPH_COMMAND:
+                response = listGraphsTask();
                 break;
             default:
                 response = "ERROR: No such command.";
