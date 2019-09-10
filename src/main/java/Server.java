@@ -3,14 +3,13 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Server implements Executor {
 
-//    private Graph graph = new Graph();
-    private Map<String, Graph> graphs = new HashMap<>();
+    private Map<String, Graph> graphs = new ConcurrentHashMap<>();
 
     private static final String ADD_EDGE_COMMAND = "add_edge";
     private static final String SHORTEST_DISTANCE_COMMAND = "shortest_distance";
@@ -73,7 +72,13 @@ public class Server implements Executor {
             return "ERROR: 1 argument required";
         }
 
-        String graphString = graphs.get(nodes.get(0)).toString();
+        String graphName = nodes.get(0);
+        if (!graphs.containsKey(graphName)) {
+            log(String.format("ERROR: %s does not exist", graphName));
+            return String.format("ERROR: %s does not exist", graphName);
+        }
+
+        String graphString = graphs.get(graphName).toString();
         log("OK: Sent graph");
         if (graphString.isEmpty()) return graphString;
         return graphString.substring(0, graphString.length()-1);

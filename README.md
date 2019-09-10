@@ -6,8 +6,8 @@ To run:
 - Run "java Client" for client in out/production/classes.
 
 Note:
-- New commands are "add_graph <graph_name>" and "list_graphs".
+- New commands are "add_graph graph_name" and "list_graphs".
 - For every command the graph name has to be specified.
-- "add_edge <graph_name> <node1> <node2>"
-- "shortest_distance <graph_name> <node1> <node2>"
-- "get_graph <graph_name>"
+- "add_edge graph_name node1 node2"
+- "shortest_distance graph_name node1 node2"
+- "get_graph graph_name"
