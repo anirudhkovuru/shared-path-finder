@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class Server implements Executor {
 
-    private Graph graph = new Graph();
+//    private Graph graph = new Graph();
     private Map<String, Graph> graphs = new HashMap<>();
 
     private static final String ADD_EDGE_COMMAND = "add_edge";
@@ -23,39 +23,57 @@ public class Server implements Executor {
     }
 
     private String addEdgeTask(List<String> nodes) {
-        if (nodes.size() != 2) {
-            log("ERROR: 2 vertices required");
-            return "ERROR: 2 vertices required";
+        if (nodes.size() != 3) {
+            log("ERROR: 3 arguments required");
+            return "ERROR: 3 arguments required";
         }
 
-        String node1 = nodes.get(0);
-        String node2 = nodes.get(1);
-        graph.addEdge(node1, node2);
+        String graphName = nodes.get(0);
+        if (!graphs.containsKey(graphName)) {
+            log(String.format("ERROR: %s does not exist", graphName));
+            return String.format("ERROR: %s does not exist", graphName);
+        }
 
-        log(String.format("OK: Edge added between %s and %s", node1, node2));
-        return String.format("OK: Edge added between %s and %s", node1, node2);
+        String node1 = nodes.get(1);
+        String node2 = nodes.get(2);
+        graphs.get(graphName).addEdge(node1, node2);
+
+        log(String.format("OK: Edge added between %s and %s to %s", node1, node2, graphName));
+        return String.format("OK: Edge added between %s and %s to %s", node1, node2, graphName);
     }
 
     private String shortestDistanceTask(List<String> nodes) {
-        if (nodes.size() != 2) {
-            log("ERROR: 2 vertices required");
-            return "ERROR: 2 vertices required";
+        if (nodes.size() != 3) {
+            log("ERROR: 3 arguments required");
+            return "ERROR: 3 arguments required";
         }
 
-        String node1 = nodes.get(0);
-        String node2 = nodes.get(1);
+        String graphName = nodes.get(0);
+        if (!graphs.containsKey(graphName)) {
+            log(String.format("ERROR: %s does not exist", graphName));
+            return String.format("ERROR: %s does not exist", graphName);
+        }
+
+        String node1 = nodes.get(1);
+        String node2 = nodes.get(2);
+        Graph graph = graphs.get(graphName);
 
         if (graph.doesNotContainVertex(node1) || graph.doesNotContainVertex(node2)) {
             log("ERROR: one of the vertices does not exist");
             return "ERROR: one of the vertices does not exist";
         }
 
-        log(String.format("OK: Sent the path length between %s and %s", node1, node2));
+        log(String.format("OK: Sent the path length between %s and %s in %s", node1, node2, graphName));
         return String.valueOf(graph.shortestPath(node1, node2));
     }
 
-    private String getGraphTask() {
-        String graphString = graph.toString();
+    private String getGraphTask(List<String> nodes) {
+        if (nodes.size() != 1) {
+            log("ERROR: 1 argument required");
+            return "ERROR: 1 argument required";
+        }
+
+        String graphString = graphs.get(nodes.get(0)).toString();
         log("OK: Sent graph");
         if (graphString.isEmpty()) return graphString;
         return graphString.substring(0, graphString.length()-1);
@@ -104,7 +122,7 @@ public class Server implements Executor {
                 response = shortestDistanceTask(command.getArgs());
                 break;
             case GET_GRAPH_COMMAND:
-                response = getGraphTask();
+                response = getGraphTask(command.getArgs());
                 break;
             case ADD_GRAPH_COMMAND:
                 response = addGraphTask(command.getArgs());
